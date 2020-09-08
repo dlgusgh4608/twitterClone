@@ -20,7 +20,7 @@
         "react-hooks"
     ],
     "rules" : {
-         "semi":"error"
+         "semi":"always"
 
     }
 }
