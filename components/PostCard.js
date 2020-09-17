@@ -5,6 +5,7 @@ import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, Hear
 import PropTypes from 'prop-types';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
+import PostHashContent from './PostHashContent';
 
 const PostCard = ({ post }) => {
     const id = useSelector((state) => state.user.me?.id);
@@ -25,9 +26,9 @@ const PostCard = ({ post }) => {
                 actions={[
                     <RetweetOutlined key='retweet' />,
                     liked
-                        ? <HeartFilled style={{color:'#FF0080' }} onClick={onToggleLike} />
+                        ? <HeartFilled style={{ color: '#FF0080' }} onClick={onToggleLike} />
                         : <HeartOutlined key='heart' onClick={onToggleLike} />,
-                        <MessageOutlined key='comment' onClick={onToggleComment} />,
+                    <MessageOutlined key='comment' onClick={onToggleComment} />,
                     <Popover key='more' content={(
                         <Button.Group>
                             {id && post.User.id === id
@@ -47,7 +48,7 @@ const PostCard = ({ post }) => {
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                     title={post.User.nickname}
-                    description={post.content}
+                    description={<PostHashContent postData={post.content} />}
                 >
 
                 </Card.Meta>
@@ -55,14 +56,14 @@ const PostCard = ({ post }) => {
             </Card>
             {commentFormOpen && (
                 <div>
-                    <CommentForm post={post}/>
-                    <List 
+                    <CommentForm post={post} />
+                    <List
                         header={`${post.Comments.length}개의 댓글`}
                         itemLayout='horizontal'
                         dataSource={post.Comments}
                         renderItem={(item) => (
                             <li>
-                                <Comment 
+                                <Comment
                                     avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
                                     author={item.User.nickname}
                                     content={item.content}
