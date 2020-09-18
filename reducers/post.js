@@ -35,6 +35,18 @@ export const addPost = {
     type:ADD_POST    
 }
 
+export const addPostRequest = {
+    type:'ADD_POST_REQUEST'
+}
+
+export const addPostSuccess = {
+    type:'ADD_POST_SUCCESS'
+}
+
+export const addPostFailed = {
+    type:'ADD_POST_FAILED'
+}
+
 const dummyPost = {
     id:2,
     content:'dummydata',
