@@ -11,7 +11,12 @@ import {
     POST_DELETE_REQUEST,
     POST_DELETE_SUCCESS,
     POST_DELETE_FAILURE,
+    LOAD_POSTS_REQUEST,
+    LOAD_POSTS_FAILURE,
+    LOAD_POSTS_SUCCESS,
+    generateDummypost,
 } from '../reducers/post';
+
 import { 
     ADD_TO_POST_ME,
     DELETE_TO_POST_ME,
@@ -20,10 +25,6 @@ import {
 function addPostAPI(data) {
     return axios.post('/api/addPost', data)
 }
-function addCommentAPI(data) {
-    return axios.post(`/api/post/${data.id}/comment`, data)
-}
-
 function* addPost(action) {
     try {
         // const result = yield call(addPostAPI, action.data);
@@ -47,6 +48,10 @@ function* addPost(action) {
         })
     }
 }
+
+function addCommentAPI(data) {
+    return axios.post(`/api/post/${data.id}/comment`, data)
+}
 function* addComment(action) {
     try {
         // const result = yield call(addCommentAPI, action.data);
@@ -62,9 +67,13 @@ function* addComment(action) {
         })
     }
 }
+
+function deletePostAPI(data) {
+    return axios.post(`/api/post/${data.id}/comment`, data)
+}
 function* deletePost(action) {
     try {
-        // const result = yield call(addCommentAPI, action.data);
+        // const result = yield call(deletePostAPI, action.data);
         yield delay(1000);
         yield put({
             type: POST_DELETE_SUCCESS,
@@ -82,6 +91,25 @@ function* deletePost(action) {
     }
 }
 
+function loadPostsAPI(data) {
+    return axios.get('/api/posts', data)
+}
+function* loadPosts(action) {
+    try {
+        // const result = yield call(loadPostsAPI, action.data);
+        yield delay(1000);
+        yield put({
+            type: LOAD_POSTS_SUCCESS,
+            data: generateDummypost(10),
+        })
+    } catch (err) {
+        yield put({
+            type: LOAD_POSTS_FAILURE,
+            data: err.response.data,
+        })
+    }
+}
+
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -91,11 +119,15 @@ function* watchAddComment() {
 function* watchDeletePost() {
     yield takeLatest(POST_DELETE_REQUEST,deletePost);
 }
+function* watchLoadPosts() {
+    yield takeLatest(LOAD_POSTS_REQUEST,loadPosts);
+}
 
 export default function* postSaga() {
     yield all([
         fork(watchAddPost),
         fork(watchAddComment),
         fork(watchDeletePost),
+        fork(watchLoadPosts),
     ])
 }

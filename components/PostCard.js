@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostHashContent from './PostHashContent';
+import FollwButton from './FollowButton';
 import { POST_DELETE_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
@@ -54,6 +55,7 @@ const PostCard = ({ post }) => {
                         <EllipsisOutlined />
                     </Popover>
                 ]}
+                extra={id && <FollwButton post={post} />}
             >
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
