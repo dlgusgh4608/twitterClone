@@ -1,14 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, Button, Popover, Avatar, List, Comment } from 'antd';
 import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostHashContent from './PostHashContent';
+import { POST_DELETE_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
+    const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
+    const { deletePostLodding } = useSelector((state) => state.post);
 
     const [liked, setLiked] = useState(false);
     const onToggleLike = useCallback(() => {
@@ -19,6 +22,13 @@ const PostCard = ({ post }) => {
     const onToggleComment = useCallback(() => {
         setCommentFormOpen((prev) => !prev);
     }, []);
+
+    const onPostDelete = useCallback(() => {
+        dispatch({
+            type: POST_DELETE_REQUEST,
+            data: post.id
+        });
+    }, [])
     return (
         <div style={{ marginBottom: 20 }}>
             <Card
@@ -35,7 +45,7 @@ const PostCard = ({ post }) => {
                                 ? (
                                     <>
                                         <Button>수정</Button>
-                                        <Button type='danger'>삭제</Button>
+                                        <Button type='danger' onClick={onPostDelete} loading={deletePostLodding}>삭제</Button>
                                     </>
                                 ) : <Button>신고</Button>}
 

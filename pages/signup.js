@@ -4,14 +4,18 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import { Form, Input, Button, Checkbox } from 'antd';
 import useInput from '../hooks/useInput';
+import { SIGN_UP_REQUEST } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ErrorMessage = styled.div`
     color:red;    
 `;
 
 const Signup = () => {
+    const { signUpLodding } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
-    const [id, onChangeId] = useInput('');
+    const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
 
@@ -36,7 +40,11 @@ const Signup = () => {
         if (!term) {
             return termError(true);
         }
-        console.log(id, nickname, password);
+        dispatch({
+            type: SIGN_UP_REQUEST,
+            data: { email, password, nickname }
+        })
+        console.log(email, nickname, password);
     }, [password, passwordCheck, term]);
 
     return (
@@ -47,9 +55,9 @@ const Signup = () => {
             <AppLayout>
                 <Form onFinish={onSubmit}>
                     <div>
-                        <label htmlFor='user-id'>아이디</label>
+                        <label htmlFor='user-email'>이메일</label>
                         <br />
-                        <Input.Search name='user-id' placeholder='아이디를 입력해주세요.' enterButton='중복확인' required value={id} onChange={onChangeId} />
+                        <Input name='user-email' placeholder='이메일을 입력해주세요.' required value={email} onChange={onChangeEmail} />
                     </div>
                     <div>
                         <label htmlFor='user-nickname'>닉네임</label>
@@ -68,11 +76,11 @@ const Signup = () => {
                         {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
                     </div>
                     <div>
-                        <Checkbox name='user-term' checked={term} onChange={onChangeTerm} >더 콰트로치즈와퍼가 맛있는것에 동의하십니까? ㅇㅇ 동의</Checkbox>
+                        <Checkbox name='user-term' checked={term} onChange={onChangeTerm}>ㄹㅇㅋㅋ</Checkbox>
                         {termError && <ErrorMessage>약관에 동의해주세요.</ErrorMessage>}
                     </div>
                     <div>
-                        <Button type='primary' htmlType='submit'>가입하기</Button>
+                        <Button type='primary' htmlType='submit' loading={signUpLodding}>가입하기</Button>
                     </div>
                 </Form>
             </AppLayout>
