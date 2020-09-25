@@ -14,15 +14,17 @@ import {
     UNFOLLOW_FAILURE,
     UNFOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
+    SIGN_UP_REQUEST,
+    SIGN_UP_FAILURE,
+    SIGN_UP_SUCCESS,
  } from '../reducers/user';
 
 function logInAPI(data) {
-    return axios.post('/api/login')
+    return axios.post('/user/login', data)
 }
 function* logIn(action) {
     try {
-        // const result = yield call(logInAPI, action.data);
-        yield delay(1000);
+        const result = yield call(logInAPI, action.data);
         yield put({
             type: LOG_IN_SUCCESS,
             data: action.data
@@ -30,13 +32,13 @@ function* logIn(action) {
     } catch (err) {
         yield put({
             type: LOG_IN_FAILURE,
-            data: err.response.data,
+            error: err.response.data,
         })
     }
 }
 
 function logOutAPI() {
-    return axios.post('/api/logout')
+    return axios.post('/logout')
 }
 function* logOut() {
     try {
@@ -48,13 +50,13 @@ function* logOut() {
     } catch (err) {
         yield put({
             type: LOG_OUT_FAILURE,
-            data: err.response.data,
+            error: err.response.data,
         })
     }
 }
 
 function followAPI() {
-    return axios.post('/api/follow')
+    return axios.post('/follow')
 }
 function* follow(action) {
     try {
@@ -67,13 +69,13 @@ function* follow(action) {
     } catch (err) {
         yield put({
             type: FOLLOW_FAILURE,
-            data: err.response.data,
+            error: err.response.data,
         })
     }
 }
 
 function unfollowAPI() {
-    return axios.post('/api/unfollow')
+    return axios.post('/unfollow')
 }
 function* unfollow(action) {
     try {
@@ -86,7 +88,25 @@ function* unfollow(action) {
     } catch (err) {
         yield put({
             type: UNFOLLOW_FAILURE,
-            data: err.response.data,
+            error: err.response.data,
+        })
+    }
+}
+//GET, DELETE 요청은 데이터를 넘길 수 없다.
+function signUpAPI(data) {
+    return axios.post('/user/signUp', data)
+}
+function* signUp(action) {
+    try {
+        const result = yield call(signUpAPI, action.data);
+        yield put({
+            type: SIGN_UP_SUCCESS,
+            data: action.data,
+        })
+    } catch (err) {
+        yield put({
+            type: SIGN_UP_FAILURE,
+            error: err.response.data,
         })
     }
 }
@@ -103,6 +123,9 @@ function* watchFollow() {
 function* watchUnfollow() {
     yield takeLatest(UNFOLLOW_REQUEST, unfollow);
 }
+function* watchSignUp() {
+    yield takeLatest(SIGN_UP_REQUEST, signUp);
+}
 
 export default function* userSaga() {
     yield all([
@@ -110,5 +133,7 @@ export default function* userSaga() {
         fork(watchLogOut),
         fork(watchFollow),
         fork(watchUnfollow),
+        fork(watchSignUp),
+
     ])
 }

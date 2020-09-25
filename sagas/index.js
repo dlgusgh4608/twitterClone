@@ -1,12 +1,13 @@
 import { fork, all } from 'redux-saga/effects';
-
+import axios from 'axios';
 import postSaga from './post';
 import userSaga from './user';
+
+axios.defaults.baseURL = 'http://localhost:4000';
 
 //action은 take로 LOG_IN_REQUEST에 보내고 매개변수로 받아진다.
 //call에서는 호출할때 call(호출하는 함수, 파라미터) 이런식으로 넘긴다.
 //yield를 붙히는 이유는 ?.next()로 하나하나 검사하기 편해서.
-
 
 //all은 배열을 받아 배열안에 전부를 다 실행시킨다.
 //fork는 함수를 실행시키지만 데이터가 올때까지 기다리지 않는다.
